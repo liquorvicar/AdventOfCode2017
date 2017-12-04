@@ -12,7 +12,7 @@
   "autoload": {
     "psr-4": {
       "Liquorvicar\\AdventOfCode\\": "src/",
-      "Liquorvicar\\AdventOfCode\\tests\\": "tests/",
+      "Liquorvicar\\AdventOfCode\\tests\\": "tests/"
     }
   },
   "require-dev": {
