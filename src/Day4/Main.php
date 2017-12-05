@@ -21,7 +21,6 @@ class Main implements IMain {
     {
         $numValid = 0;
         foreach ($input as $index => $passphrase) {
-            $passphrase = trim($passphrase);
             $passphrase = $this->sortWords($passphrase);
             if ($this->validate($passphrase)) {
                 $numValid++;
