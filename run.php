@@ -18,7 +18,7 @@ $class = '\Liquorvicar\AdventOfCode\Day' . $day . '\Main';
 
 $input = file($folder . 'input.txt');
 
-$input = array_map('trim', $input);
+//$input = array_map('trim', $input);
 
 /** @var \Liquorvicar\AdventOfCode\IMain $counter */
 $counter = new $class;
