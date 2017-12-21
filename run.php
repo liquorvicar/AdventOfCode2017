@@ -1,6 +1,8 @@
 <?php
 require 'vendor/autoload.php';
 
+ini_set('memory_limit', '1024M');
+
 $day = date('j');
 $found = false;
 while (!$found && $day > 0) {
