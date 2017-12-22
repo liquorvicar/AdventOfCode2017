@@ -12,7 +12,7 @@ class MainTests extends TestCase {
     public function testVirusCarrierOnCleanNode() {
         $grid = new Grid([['.']]);
         $carrier = new Carrier(0, 0, Carrier::LEFT);
-        $expectedGrid = new Grid([['#']], 1);
+        $expectedGrid = new Grid([['W']]);
         $expectedCarrier = new Carrier(0, 1, Carrier::DOWN);
         $this->assertEquals($expectedCarrier, $carrier->burst($grid));
         $this->assertEquals($expectedGrid, $grid);
@@ -21,7 +21,7 @@ class MainTests extends TestCase {
     public function testVirusCarrierOnInfectedNode() {
         $grid = new Grid([['#']]);
         $carrier = new Carrier(0, 0, Carrier::LEFT);
-        $expectedGrid = new Grid([['.']]);
+        $expectedGrid = new Grid([['F']]);
         $expectedCarrier = new Carrier(0, -1, Carrier::UP);
         $this->assertEquals($expectedCarrier, $carrier->burst($grid));
         $this->assertEquals($expectedGrid, $grid);
@@ -29,37 +29,61 @@ class MainTests extends TestCase {
 
     public function testDetectInfectedSquare() {
         $grid = new Grid([['#']]);
-        $this->assertEquals(true, $grid->isInfected(0, 0));
+        $this->assertEquals(Grid::INFECTED, $grid->currentState(0, 0));
     }
 
     public function testDetectCleanSquare() {
         $grid = new Grid([['.']]);
-        $this->assertEquals(false, $grid->isInfected(0, 0));
+        $this->assertEquals(Grid::CLEAN, $grid->currentState(0, 0));
+    }
+
+    public function testDetectWeakenedSquare() {
+        $grid = new Grid([['W']]);
+        $this->assertEquals(Grid::WEAKENED, $grid->currentState(0, 0));
+    }
+
+    public function testDetectFlaggedSquare() {
+        $grid = new Grid([['F']]);
+        $this->assertEquals(Grid::FLAGGED, $grid->currentState(0, 0));
     }
 
     public function testDetectNewSquareIsClean() {
         $grid = new Grid([['.']]);
-        $this->assertEquals(false, $grid->isInfected(1, 0));
+        $this->assertEquals(Grid::CLEAN, $grid->currentState(1, 0));
     }
 
     public function testDetectNewSquareIsCreated() {
         $grid = new Grid([['.']]);
         $expected = new Grid([['.', '.']]);
-        $grid->isInfected(1, 0);
+        $grid->currentState(1, 0);
         $this->assertEquals($expected, $grid);
     }
 
     public function testCleanSquare() {
-        $grid = new Grid([['#']]);
+        $grid = new Grid([['F']]);
         $expected = new Grid([['.']]);
         $grid->clean(0, 0);
         $this->assertEquals($expected, $grid);
     }
 
     public function testInfectSquare() {
-        $grid = new Grid([['.']], 0);
+        $grid = new Grid([['W']], 0);
         $expected = new Grid([['#']], 1);
         $grid->infect(0, 0);
+        $this->assertEquals($expected, $grid);
+    }
+
+    public function testWeakenSquare() {
+        $grid = new Grid([['.']], 0);
+        $expected = new Grid([['W']], 0);
+        $grid->weaken(0, 0);
+        $this->assertEquals($expected, $grid);
+    }
+
+    public function testFlagSquare() {
+        $grid = new Grid([['#']], 0);
+        $expected = new Grid([['F']], 0);
+        $grid->flag(0, 0);
         $this->assertEquals($expected, $grid);
     }
 
@@ -86,7 +110,7 @@ class MainTests extends TestCase {
             ['#', '.', '.'],
             ['.', '.', '.'],
         ];
-        $this->assertEquals(41, $main->countInfectedNodes($grid, 70));
+        $this->assertEquals(26, $main->countInfectedNodes($grid, 100));
     }
 
     public function testCountInfectedNodesWithMoreIterations() {
@@ -96,6 +120,6 @@ class MainTests extends TestCase {
             ['#', '.', '.'],
             ['.', '.', '.'],
         ];
-        $this->assertEquals(5587, $main->countInfectedNodes($grid, 10000));
+        $this->assertEquals(2511944, $main->countInfectedNodes($grid, 10000000));
     }
 }

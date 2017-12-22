@@ -16,7 +16,10 @@ class Main implements IMain
 
     public function runPartTwo(array $input)
     {
-        // TODO: Implement runPartTwo() method.
+        $grid = array_map(function ($element) {
+            return str_split(trim($element));
+        }, $input);
+        return $this->countInfectedNodes($grid, 10000000);
     }
 
     public function countInfectedNodes($grid, $iterations)

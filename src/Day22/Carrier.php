@@ -28,13 +28,16 @@ class Carrier
 
     public function burst(Grid $grid): Carrier
     {
-        if ($grid->isInfected($this->x, $this->y)) {
+        $state = $grid->currentState($this->x, $this->y);
+        $direction = $this->direction;
+        if ($state === Grid::INFECTED) {
             $direction = ($this->direction + 1) % 4;
-            $grid->clean($this->x, $this->y);
-        } else {
+        } elseif ($state === Grid::CLEAN) {
             $direction = $this->direction > 0 ? $this->direction - 1 : 3;
-            $grid->infect($this->x, $this->y);
+        } elseif ($state === Grid::FLAGGED) {
+            $direction = ($this->direction + 2) % 4;
         }
+        $grid->act($this->x, $this->y);
         $x = $this->x;
         $y = $this->y;
         switch ($direction) {
